@@ -1,7 +1,7 @@
 # blue-gen
 This program combines multiple TIFF images into a single TIFF color plate for Halo Custom Edition bitmap creation.
 
-The syntax is simple: the paths to your images with sequences separated by `-s`.
+The syntax is simple: the paths to your images with sequences separated by `-s`. The last argument is the output image.
 
 By default, blue (`#0000FF`) is used to separate bitmaps and magenta (`#FF00FF`) is used to separate sequences. If any
 bitmap uses either color, then some other color unused by your bitmap(s) will be used, instead. If, somehow, you used
