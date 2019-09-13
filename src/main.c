@@ -33,8 +33,13 @@ int main(int argc, char **argv) {
         {0, 0, 0, 0 }
     };
 
+    int first_sequence = 1;
+    while(first_sequence < argc && strcmp(argv[first_sequence], "-s") != 0) {
+        first_sequence++;
+    }
+
     // Go through each argument
-    while((opt = getopt_long(argc, argv, "hd:", options, &longindex)) != -1) {
+    while((opt = getopt_long(first_sequence, argv, "hd:", options, &longindex)) != -1) {
         switch(opt) {
             case 'd':
                 for(char *c = optarg; *c; c++) {
@@ -55,7 +60,9 @@ int main(int argc, char **argv) {
                 break;
 
             case 'h':
-                fprintf(stderr, "Usage: %s [options] <output> s <s1image1> [s1image2 ...] [s <s2image1> ...]\n", program);
+            case 0:
+                FAIL_HELP:
+                fprintf(stderr, "Usage: %s [options] <output> -s <s1image1> [s1image2 ...] [-s <s2image1> ...]\n", program);
                 fprintf(stderr, "Options:\n");
                 fprintf(stderr, "    --dummy-space,-d <color>   Set the color of the dummy space (normally cyan)\n");
                 fprintf(stderr, "                               via hex code. Default: 00FFFF\n");
@@ -64,17 +71,16 @@ int main(int argc, char **argv) {
         }
     }
 
-    if(optind + 2 >= argc) {
-        char *new_argv[] = {program, "-h"};
-        return main(2, new_argv);
+    if(first_sequence == argc || optind == first_sequence) {
+        goto FAIL_HELP;
     }
 
-    const char *output_path = argv[optind];
+    const char *output_path = argv[first_sequence - 1];
 
     // Figure out how many sequences we have
     size_t sequence_count = 0;
-    for(int i = optind + 1; i < argc; i++) {
-        if(strcmp(argv[i], "s") == 0) {
+    for(int i = first_sequence; i < argc; i++) {
+        if(strcmp(argv[i], "-s") == 0) {
             sequence_count++;
         }
     }
@@ -86,14 +92,14 @@ int main(int argc, char **argv) {
 
     // Allocate sequences
     BlueGenImageSequence *sequences = malloc(sequence_count * sizeof(*sequences));
-    int i = optind + 2;
+    int i = first_sequence + 1;
     for(size_t s = 0; s < sequence_count; s++) {
         BlueGenImageSequence *sequence = sequences + s;
         sequence->image_count = 0;
 
         // Get all of the images in the sequence
         for(int is = i; is < argc; is++) {
-            if(strcmp(argv[is], "s") == 0) {
+            if(strcmp(argv[is], "-s") == 0) {
                 break;
             }
             sequence->image_count++;
