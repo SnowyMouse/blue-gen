@@ -19,17 +19,16 @@ typedef struct TIFFTag {
 static const uint16_t BITS_PER_SAMPLE[4] = { 0x8, 0x8, 0x8, 0x8 };
 
 int main(int argc, const char **argv) {
-    if(argc < 3) {
-        fprintf(stderr, "Usage: %s <sequence1image1> [sequence1image2... [-s <sequence2image1> ...]] <output>\n", argv[0]);
+    if(argc < 3 || strcmp(argv[2], "-s") != 0) {
+        fprintf(stderr, "Usage: %s <output> -s <s1image1> [s1image2 ...] [-s <s2image1> ...]\n", argv[0]);
         return 1;
     }
 
-    const char *output_path = argv[argc - 1];
-    argc--;
+    const char *output_path = argv[1];
 
     // Figure out how many sequences we have
     size_t sequence_count = 1;
-    for(int i = 1; i < argc; i++) {
+    for(int i = 3; i < argc; i++) {
         if(strcmp(argv[i], "-s") == 0) {
             sequence_count++;
         }
@@ -37,7 +36,7 @@ int main(int argc, const char **argv) {
 
     // Allocate sequences
     BlueGenImageSequence *sequences = malloc(sequence_count * sizeof(*sequences));
-    int i = 1;
+    int i = 3;
     for(size_t s = 0; s < sequence_count; s++) {
         BlueGenImageSequence *sequence = sequences + s;
         sequence->image_count = 0;
@@ -63,7 +62,7 @@ int main(int argc, const char **argv) {
 
     FILE *f = fopen(output_path, "wb");
     if(!f) {
-        fprintf(stderr, "Failed to open %s for writing.\n", output_path);
+        fprintf(stderr, "(v)> Failed to open %s for writing.\n", output_path);
         return 1;
     }
 
@@ -204,6 +203,8 @@ int main(int argc, const char **argv) {
     fwrite(BITS_PER_SAMPLE, sizeof(BITS_PER_SAMPLE), 1, f);
 
     fclose(f);
+
+    fprintf(stdout, "(^)> Yay! I made a %ux%u image.\n", output_image.width, output_image.height);
 
     return 0;
 }

@@ -50,7 +50,7 @@ void increment_pixel(BlueGenPixel *pixel) {
         if(pixel->green == 0xFF) {
             pixel->green = 0x00;
             if(pixel->blue == 0xFF) {
-                printf("Error: Every single color has been used up.\n");
+                fprintf(stderr, "(O)< Eep! Every color is in use! I need two unused colors for the color plate.\n");
                 exit(1);
             }
             else {
@@ -188,7 +188,7 @@ void load_tiff(BlueGenImage *image, const char *path) {
     // Open the tiff
     TIFF *image_tiff = TIFFOpen(path, "r");
     if(!image_tiff) {
-        fprintf(stderr, "Cannot open TIFF %s\n", path);
+        fprintf(stderr, "(v)> Cannot open TIFF %s\n", path);
         exit(EXIT_FAILURE);
     }
 

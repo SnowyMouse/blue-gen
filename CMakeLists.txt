@@ -9,7 +9,7 @@ cmake_minimum_required(VERSION 3.10)
 
 # Project name - You should change this if you're making a fork
 project(blue-gen
-    VERSION 0.1.0
+    VERSION 0.2.0
     DESCRIPTION "Color plate generator for Halo Custom Edition"
     LANGUAGES C CXX
 )
