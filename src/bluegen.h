@@ -52,9 +52,10 @@ void initialize_bluegen_image(BlueGenImage *image, uint32_t width, uint32_t heig
  * Generate an image from sequences
  * @param sequences      sequence to generate image from
  * @param sequence_count number of sequences to generate image from
+ * @param dummy_space    dummy space color
  * @param output         output image
  */
-void generate_bluegen_image(const BlueGenImageSequence *sequences, size_t sequence_count, BlueGenImage *output);
+void generate_bluegen_image(const BlueGenImageSequence *sequences, size_t sequence_count, const BlueGenPixel *dummy_space, BlueGenImage *output);
 
 /**
  * Load a TIFF at the given path

@@ -7,6 +7,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <getopt.h>
+#include <ctype.h>
 #include "bluegen.h"
 
 typedef struct TIFFTag {
@@ -18,32 +20,80 @@ typedef struct TIFFTag {
 
 static const uint16_t BITS_PER_SAMPLE[4] = { 0x8, 0x8, 0x8, 0x8 };
 
-int main(int argc, const char **argv) {
-    if(argc < 3 || strcmp(argv[2], "-s") != 0) {
-        fprintf(stderr, "Usage: %s <output> -s <s1image1> [s1image2 ...] [-s <s2image1> ...]\n", argv[0]);
-        return 1;
+int main(int argc, char **argv) {
+    int longindex = 0, opt;
+
+    BlueGenPixel dummy_color = { 0x00, 0xFF, 0xFF, 0xFF };
+
+    char *program = argv[0];
+
+    static struct option options[] = {
+        {"help",  no_argument, 0, 'h'},
+        {"dummy-space",  required_argument, 0, 'd'},
+        {0, 0, 0, 0 }
+    };
+
+    // Go through each argument
+    while((opt = getopt_long(argc, argv, "hd:", options, &longindex)) != -1) {
+        switch(opt) {
+            case 'd':
+                for(char *c = optarg; *c; c++) {
+                    *c = tolower(*c);
+                }
+
+                unsigned int r,g,b;
+                int q = sscanf(optarg, "%02x%02x%02x", &r, &g, &b);
+
+                dummy_color.red = (uint8_t)r;
+                dummy_color.green = (uint8_t)g;
+                dummy_color.blue = (uint8_t)b;
+
+                if(q != 3) {
+                    fprintf(stderr, "(v)> Dummy color must be a valid hex code (i.e. 00FFFF).\n");
+                    return 1;
+                }
+                break;
+
+            case 'h':
+                fprintf(stderr, "Usage: %s [options] <output> s <s1image1> [s1image2 ...] [s <s2image1> ...]\n", program);
+                fprintf(stderr, "Options:\n");
+                fprintf(stderr, "    --dummy-space,-d <color>   Set the color of the dummy space (normally cyan)\n");
+                fprintf(stderr, "                               via hex code. Default: 00FFFF\n");
+                fprintf(stderr, "    --help,-h                  Show help\n\n");
+                return 1;
+        }
     }
 
-    const char *output_path = argv[1];
+    if(optind + 2 >= argc) {
+        char *new_argv[] = {program, "-h"};
+        return main(2, new_argv);
+    }
+
+    const char *output_path = argv[optind];
 
     // Figure out how many sequences we have
-    size_t sequence_count = 1;
-    for(int i = 3; i < argc; i++) {
-        if(strcmp(argv[i], "-s") == 0) {
+    size_t sequence_count = 0;
+    for(int i = optind + 1; i < argc; i++) {
+        if(strcmp(argv[i], "s") == 0) {
             sequence_count++;
         }
     }
 
+    if(sequence_count == 0) {
+        char *new_argv[] = {program, "-h"};
+        return main(2, new_argv);
+    }
+
     // Allocate sequences
     BlueGenImageSequence *sequences = malloc(sequence_count * sizeof(*sequences));
-    int i = 3;
+    int i = optind + 2;
     for(size_t s = 0; s < sequence_count; s++) {
         BlueGenImageSequence *sequence = sequences + s;
         sequence->image_count = 0;
 
         // Get all of the images in the sequence
         for(int is = i; is < argc; is++) {
-            if(strcmp(argv[is], "-s") == 0) {
+            if(strcmp(argv[is], "s") == 0) {
                 break;
             }
             sequence->image_count++;
@@ -58,7 +108,7 @@ int main(int argc, const char **argv) {
     }
 
     BlueGenImage output_image;
-    generate_bluegen_image(sequences, sequence_count, &output_image);
+    generate_bluegen_image(sequences, sequence_count, &dummy_color, &output_image);
 
     FILE *f = fopen(output_path, "wb");
     if(!f) {

@@ -44,13 +44,13 @@ bool is_safe_color(const BlueGenPixel *pixel, const BlueGenImageSequence *sequen
     return true;
 }
 
-void increment_pixel(BlueGenPixel *pixel) {
+void increment_pixel(BlueGenPixel *pixel, const BlueGenPixel *dummy_space) {
     if(pixel->red == 0xFF) {
         pixel->red = 0x00;
         if(pixel->green == 0xFF) {
             pixel->green = 0x00;
             if(pixel->blue == 0xFF) {
-                fprintf(stderr, "(O)< Eep! Every color is in use! I need two unused colors for the color plate.\n");
+                fprintf(stderr, "(O)< Eep! I need two unused colors!\n");
                 exit(1);
             }
             else {
@@ -66,15 +66,15 @@ void increment_pixel(BlueGenPixel *pixel) {
     }
 
     // Skip cyan, blue, and magenta
-    if(pixel->green == 0xFF && pixel->blue == 0xFF && pixel->red == 0x00) {
-        increment_pixel(pixel);
+    if(pixel->green == dummy_space->green && pixel->blue == dummy_space->blue && pixel->red == dummy_space->red) {
+        increment_pixel(pixel, dummy_space);
     }
     if(pixel->green == 0x00 && pixel->blue == 0xFF && (pixel->red == 0x00 || pixel->red == 0xFF)) {
-        increment_pixel(pixel);
+        increment_pixel(pixel, dummy_space);
     }
 }
 
-void generate_bluegen_image(const BlueGenImageSequence *sequences, size_t sequence_count, BlueGenImage *output) {
+void generate_bluegen_image(const BlueGenImageSequence *sequences, size_t sequence_count, const BlueGenPixel *dummy_space, BlueGenImage *output) {
     // Go through each sequence so we can determine how wide and tall to make our image
     size_t width = 4;
     size_t height = 1;
@@ -112,23 +112,21 @@ void generate_bluegen_image(const BlueGenImageSequence *sequences, size_t sequen
     // Next, find some safe colors for blue and magenta
     BlueGenPixel BLUE_PIXEL = { 0x00, 0x00, 0xFF, 0xFF };
     while(!is_safe_color(&BLUE_PIXEL, sequences, sequence_count)) {
-        increment_pixel(&SAFE_PIXEL);
+        increment_pixel(&SAFE_PIXEL, dummy_space);
         BLUE_PIXEL = SAFE_PIXEL;
     }
     BlueGenPixel MAGENTA_PIXEL = { 0xFF, 0x00, 0xFF, 0xFF };
     while(!is_safe_color(&MAGENTA_PIXEL, sequences, sequence_count)) {
-        increment_pixel(&SAFE_PIXEL);
+        increment_pixel(&SAFE_PIXEL, dummy_space);
         MAGENTA_PIXEL = SAFE_PIXEL;
     }
-
-    static const BlueGenPixel CYAN_PIXEL = { 0x00, 0xFF, 0xFF, 0xFF };
 
     initialize_bluegen_image(output, width, height);
 
     // First, make the color plate
     output->pixels[0] = BLUE_PIXEL;
     output->pixels[1] = MAGENTA_PIXEL;
-    output->pixels[2] = CYAN_PIXEL;
+    output->pixels[2] = *dummy_space;
     for(uint32_t x = 3; x < width; x++) {
         output->pixels[x] = BLUE_PIXEL;
     }
