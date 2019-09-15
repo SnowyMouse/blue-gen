@@ -1,5 +1,6 @@
 # blue-gen
-This program combines multiple TIFF images into a single TIFF color plate for Halo Custom Edition bitmap creation.
+This program combines multiple TIFF, PNG, BMP, and TGA images into a single TIFF color plate for Halo Custom Edition
+bitmap creation.
 
 The syntax is simple: First include any options. Then, include your sequences. Sequences start with `-s` with each
 argument after that being the path to each bitmap.

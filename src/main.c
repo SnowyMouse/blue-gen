@@ -82,8 +82,8 @@ int main(int argc, char **argv) {
             case 0:
                 FAIL_HELP:
                 fprintf(stderr, "Usage: %s [options] <output> -s <s1image1> [s1image2 ...] [-s <s2image1> ...]\n", program);
-                fprintf(stderr, "Takes tiff images as sequences (-s) and turns them into a valid sprite plate\n");
-                fprintf(stderr, "to be compiled into a Halo bitmap.\n\n");
+                fprintf(stderr, "Takes tiff, png, bmp, and tga images as sequences (-s) and turns them into a\n");
+                fprintf(stderr, "valid sprite plate to be compiled into a Halo bitmap.\n\n");
                 fprintf(stderr, "Options:\n");
                 fprintf(stderr, "    --dummy-space,-d <color>   Set the color of the dummy space (normally cyan)\n");
                 fprintf(stderr, "                               via hex code. Default: 00FFFF (RRGGBB)\n");
