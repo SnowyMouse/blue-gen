@@ -8,6 +8,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <getopt.h>
+#include <stdbool.h>
 #include <ctype.h>
 #include "bluegen.h"
 
@@ -19,6 +20,24 @@ typedef struct TIFFTag {
 } TIFFTag;
 
 static const uint16_t BITS_PER_SAMPLE[4] = { 0x8, 0x8, 0x8, 0x8 };
+
+bool ends_with(const char *str, const char *ext) {
+    size_t str_len = strlen(str);
+    size_t ext_len = strlen(ext);
+
+    if(str_len < ext_len) {
+        return false;
+    }
+    else {
+        for(const char *i = str + str_len - ext_len, *j = ext; *i; i++, j++) {
+            if(tolower(*i) != tolower(*j)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+}
 
 int main(int argc, char **argv) {
     int longindex = 0, opt;
@@ -110,7 +129,17 @@ int main(int argc, char **argv) {
         // Allocate images
         sequence->images = malloc(sequence->image_count * sizeof(*sequence->images));
         for(int q = 0; q < sequence->image_count; q++) {
-            load_tiff(sequence->images + q, argv[i + q]);
+            const char *file = argv[i + q];
+            if(ends_with(file, ".tif") || ends_with(file, ".tiff")) {
+                load_tiff(sequence->images + q, file);
+            }
+            else if(ends_with(file, ".png") || ends_with(file, ".tga") || ends_with(file, ".bmp")) {
+                load_image(sequence->images + q, file);
+            }
+            else {
+                fprintf(stderr, "(v)> Failed to open %s! Unknown file type...\n", file);
+                return 1;
+            }
         }
         i += 1 + sequence->image_count;
     }

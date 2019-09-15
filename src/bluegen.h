@@ -21,6 +21,8 @@ typedef struct BlueGenPixel {
     uint8_t alpha;
 } BlueGenPixel;
 
+typedef void (*free_fn)(void *);
+
 typedef struct BlueGenImage {
     /** Holds a pointer to pixel data */
     BlueGenPixel *pixels;
@@ -30,6 +32,9 @@ typedef struct BlueGenImage {
 
     /** Height of the image in pixels */
     uint32_t height;
+
+    /** Was this allocated with stb? */
+    free_fn free;
 } BlueGenImage;
 
 typedef struct BlueGenImageSequence {
@@ -63,6 +68,13 @@ void generate_bluegen_image(const BlueGenImageSequence *sequences, size_t sequen
  * @param path  path to read from
  */
 void load_tiff(BlueGenImage *image, const char *path);
+
+/**
+ * Load a PNG/TGA/BMP at the given path
+ * @param image image to load to
+ * @param path  path to read from
+ */
+void load_image(BlueGenImage *image, const char *path);
 
 /**
  * Free an image; This is required to prevent memory leakage

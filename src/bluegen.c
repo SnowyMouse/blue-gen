@@ -4,11 +4,12 @@
  * This program is free software under the GNU General Public License v3.0 or later. See LICENSE for more information.
  */
 
-#include "bluegen.h"
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <tiffio.h>
+#include "bluegen.h"
+#include "stb_image.h"
 
 #define BITMAP_SPACING 4
 #define SEQUENCE_SPACING 1
@@ -19,9 +20,10 @@ void initialize_bluegen_image(BlueGenImage *image, uint32_t width, uint32_t heig
     image->pixels = calloc(width * height, sizeof(*image->pixels));
     image->height = height;
     image->width = width;
+    image->free = free;
 }
 void free_bluegen_image(BlueGenImage *image) {
-    free(image->pixels);
+    image->free(image->pixels);
 }
 
 // Determine if the color is safe
@@ -205,4 +207,17 @@ void load_tiff(BlueGenImage *image, const char *path) {
 
     // Close the TIFF
     TIFFClose(image_tiff);
+}
+
+void load_image(BlueGenImage *image, const char *path) {
+    // Load it
+    int width, height, channels = 0;
+    image->pixels = (BlueGenPixel *)stbi_load(path, &width, &height, &channels, 4);
+    if(!image->pixels) {
+        fprintf(stderr, "(v)> Failed to load %s! Error was: %s\n", path, stbi_failure_reason());
+        exit(EXIT_FAILURE);
+    }
+    image->width = (uint32_t)(width);
+    image->height = (uint32_t)(height);
+    image->free = stbi_image_free;
 }

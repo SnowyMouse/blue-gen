@@ -9,7 +9,7 @@ cmake_minimum_required(VERSION 3.10)
 
 # Project name - You should change this if you're making a fork
 project(blue-gen
-    VERSION 0.3.0
+    VERSION 0.4.0
     DESCRIPTION "Color plate generator for Halo Custom Edition"
     LANGUAGES C CXX
 )
@@ -24,6 +24,7 @@ if(${TIFF_FOUND})
     add_executable(blue-gen
         src/main.c
         src/bluegen.c
+        src/stb_impl.c
     )
     target_link_libraries(blue-gen ${TIFF_LIBRARIES})
     target_include_directories(blue-gen
