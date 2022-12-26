@@ -24,32 +24,28 @@ set(CMAKE_CXX_STANDARD 17)
 option(BUILD_QT_GUI "Enable Qt GUI frontend for blue-gen" OFF)
 
 # Find some packages
-find_package(TIFF)
+find_package(TIFF REQUIRED)
 
-if(${TIFF_FOUND})
-    add_executable(blue-gen
-        src/main.c
-        src/bluegen.c
-        src/stb_impl.c
-    )
+add_executable(blue-gen
+    src/main.c
+    src/bluegen.c
+    src/stb_impl.c
+)
 
-    if(WIN32)
-        # Add Windows resource file
-        target_sources(blue-gen PRIVATE src/windows.rc)
+if(WIN32)
+    # Add Windows resource file
+    target_sources(blue-gen PRIVATE src/windows.rc)
 
-        # Just do it.
-        if(MINGW)
-            set(TIFF_LIBRARIES ${TIFF_LIBRARIES} jpeg lzma z)
-        endif()
+    # Just do it.
+    if(MINGW)
+        set(TIFF_LIBRARIES ${TIFF_LIBRARIES} jpeg lzma z)
     endif()
-
-    target_link_libraries(blue-gen ${TIFF_LIBRARIES})
-    target_include_directories(blue-gen
-        PUBLIC ${TIFF_INCLUDE_DIRS}
-    )
-else()
-    message(FATAL_ERROR "Failed to find LibTIFF. This is required to make blue-gen.")
 endif()
+
+target_link_libraries(blue-gen ${TIFF_LIBRARIES})
+target_include_directories(blue-gen
+    PUBLIC ${TIFF_INCLUDE_DIRS}
+)
 
 if(BUILD_QT_GUI)
     find_package(Qt6 COMPONENTS Core Widgets REQUIRED)
