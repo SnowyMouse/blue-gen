@@ -9,7 +9,7 @@ cmake_minimum_required(VERSION 3.12)
 
 # Project name - You should change this if you're making a fork
 project(blue-gen
-    VERSION 0.4.0
+    VERSION 0.5.0
     DESCRIPTION "Color plate generator for Halo Custom Edition"
     LANGUAGES C CXX
 )
@@ -33,9 +33,14 @@ if(${TIFF_FOUND})
         src/stb_impl.c
     )
 
-    # Just do it.
-    if(MINGW)
-        set(TIFF_LIBRARIES ${TIFF_LIBRARIES} jpeg lzma z)
+    if(WIN32)
+        # Add Windows resource file
+        target_sources(blue-gen PRIVATE src/windows.rc)
+
+        # Just do it.
+        if(MINGW)
+            set(TIFF_LIBRARIES ${TIFF_LIBRARIES} jpeg lzma z)
+        endif()
     endif()
 
     target_link_libraries(blue-gen ${TIFF_LIBRARIES})

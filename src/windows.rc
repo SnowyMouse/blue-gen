@@ -8,13 +8,13 @@ BEGIN
     BEGIN
         BLOCK "040904B0"
         BEGIN
-            VALUE "Comments",         "Qt GUI frontend for blue-gen"
+            VALUE "Comments",         "Halo color plate creation tool"
             VALUE "CompanyName",      "Snowy Mouse"
-            VALUE "FileDescription",  "Qt GUI frontend for blue-gen"
+            VALUE "FileDescription",  "Halo color plate creation tool"
             VALUE "FileVersion",      "0.5.0.0"
-            VALUE "InternalName",     "blue-genstone"
-            VALUE "OriginalFilename", "blue-genstone.exe"
-            VALUE "ProductName",      "blue-genstone"
+            VALUE "InternalName",     "blue-gen"
+            VALUE "OriginalFilename", "blue-gen.exe"
+            VALUE "ProductName",      "blue-gen"
             VALUE "ProductVersion",   "0.5.0.0"
             VALUE "LegalCopyright",   "'19 - '22 Snowy Mouse"
         END
@@ -25,4 +25,4 @@ BEGIN
     END
 END
 
-IDI_ICON1 ICON DISCARDABLE "blue-genstone.ico"
+IDI_ICON1 ICON DISCARDABLE "blue-gen.ico"
