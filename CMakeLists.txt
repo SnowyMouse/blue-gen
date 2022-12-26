@@ -32,6 +32,12 @@ if(${TIFF_FOUND})
         src/bluegen.c
         src/stb_impl.c
     )
+
+    # Just do it.
+    if(MINGW)
+        set(TIFF_LIBRARIES ${TIFF_LIBRARIES} jpeg lzma z)
+    endif()
+
     target_link_libraries(blue-gen ${TIFF_LIBRARIES})
     target_include_directories(blue-gen
         PUBLIC ${TIFF_INCLUDE_DIRS}
