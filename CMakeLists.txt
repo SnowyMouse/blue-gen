@@ -53,7 +53,7 @@ if(BUILD_QT_GUI)
     set(CMAKE_AUTORCC ON)
     set(CMAKE_AUTOUIC ON)
 
-    set(BLUE_GENSONE_LIBRARIES Qt6::Widgets)
+    set(BLUE_GENSTONE_LIBRARIES Qt6::Widgets)
 
     add_executable(blue-genstone
         blue-genstone/aboutdialog.cpp
@@ -67,15 +67,15 @@ if(BUILD_QT_GUI)
         target_sources(blue-genstone PRIVATE blue-genstone/windows.rc)
 
         # Don't spawn a CMD window when you open blue-genstone
-        set(BLUE_GENSONE_LIBRARIES ${BLUE_GENSONE_LIBRARIES} -mwindows)
+        set(BLUE_GENSTONE_LIBRARIES ${BLUE_GENSTONE_LIBRARIES} -mwindows)
 
         # Required for FORTIFY_SOURCES
         if(MINGW)
             set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fstack-protector")
-            set(BLUE_GENSONE_LIBRARIES ${BLUE_GENSONE_LIBRARIES} ssp)
+            set(BLUE_GENSTONE_LIBRARIES ${BLUE_GENSTONE_LIBRARIES} ssp)
         endif()
     endif()
 
-    target_link_libraries(blue-genstone ${BLUE_GENSONE_LIBRARIES})
+    target_link_libraries(blue-genstone ${BLUE_GENSTONE_LIBRARIES})
     target_include_directories(blue-genstone PUBLIC ${Qt6Widgets_INCLUDE_DIRS})
 endif()
