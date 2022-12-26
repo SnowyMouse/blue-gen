@@ -93,7 +93,7 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Source Code: &lt;a href=&quot;https://github.com/Kavawuvi/blue-gen&quot;&gt;https://github.com/Kavawuvi/blue-gen&lt;/a&gt;&lt;br /&gt;License: GNU GPL Version 3&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Source Code: &lt;a href=&quot;https://github.com/SnowyMouse/blue-gen&quot;&gt;https://github.com/SnowyMouse/blue-gen&lt;/a&gt;&lt;br /&gt;License: GNU GPL Version 3&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignHCenter|Qt::AlignTop</set>

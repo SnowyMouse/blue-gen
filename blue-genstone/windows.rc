@@ -1,0 +1,28 @@
+// SPDX-License-Identifier: GPL-3.0-only
+
+1 VERSIONINFO
+FILEVERSION      0,1,0,0
+PRODUCTVERSION   0,1,0,0
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904B0"
+        BEGIN
+            VALUE "Comments",         "Qt GUI frontend for blue-gen"
+            VALUE "CompanyName",      "Snowy Mouse"
+            VALUE "FileDescription",  "Qt GUI frontend for blue-gen"
+            VALUE "FileVersion",      "0.1.0.0"
+            VALUE "InternalName",     "blue-genstone"
+            VALUE "OriginalFilename", "blue-genstone.exe"
+            VALUE "ProductName",      "blue-genstone"
+            VALUE "ProductVersion",   "0.1.0.0"
+            VALUE "LegalCopyright",   "'19 - '22 Snowy Mouse"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1200
+    END
+END
+
+IDI_ICON1 ICON DISCARDABLE "blue-genstone.ico"
